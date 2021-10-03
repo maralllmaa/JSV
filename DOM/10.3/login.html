@@ -1,0 +1,8 @@
+<script>
+    let users;
+    window.addEventListener('load', () => {
+        if(localStorage['users']){
+            users = JSON.parse(localStorage['users'])
+        }
+    })
+</script>

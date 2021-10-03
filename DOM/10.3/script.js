@@ -11,51 +11,39 @@ const inputs = document.querySelectorAll('.input');
 let isValidForm;
 let users = [];
 
-class User {
-    constructor(username, email, number, password, dob){
-        this.username = username;
-        this.email = email;
-        this.number = number;
-        this.password = password;
-        this.dob = dob;
-        this.posts = [];
-    }
-}
 
-// MVS - Model , View, Controller
+
+import {User} from './model.js';
+import { register } from './controller.js'
+
+// let obj = {
+//     ner: "narada",
+//     nas: 1345
+// }
+
+// let post = new model.Post()
+
+// let arr = [1,2,3,4,5]
+
+// let {ner, nas} = obj;
+
+// let [a, b, c, , p] = arr
+
+// console.log(user)
+// console.log(nas)
+// console.log(post)
+
+// MVS - Model , View, Controller;
+
+window.addEventListener('load', () => {
+    if(localStorage['users']){
+        users = JSON.parse(localStorage['users'])
+    }
+})
 
 submit.addEventListener('click', e => {
     e.preventDefault();
-    isValidForm = true;
-    inputs.forEach(input => {
-        if(input.value === ''){
-            isValidForm = false
-        }
-    });
-    
-    if(isValidForm){
-        if(password.value !== passwordConfirm.value){
-            swal({
-                icon: 'error',
-                title: 'Алдаа гарлаа',
-                text: 'Хоосон байж болохгүй'
-            })
-            return
-        }
-        const user = new User(username.value, email.value, number.value, password.value, dob.value);
-        users.push(user);
-
-        localStorage.setItem('users', JSON.stringify(users))
-        resetForm()
-        // location.href = './login.html'
-    } else {
-        swal({
-            icon: 'error',
-            title: 'Алдаа гарлаа',
-            text: 'Хоосон байж болохгүй'
-        })
-        return
-    }
+    register(users, inputs, User,isValidForm, resetForm)
 })
 
 
@@ -67,3 +55,14 @@ function resetForm(){
     password.value= '';
     passwordConfirm.value= '';
 }
+
+// https://github.com/Taichir0923/JSV
+
+
+// Module
+
+// IIFE - Immedialtely  Invoked Function Expression
+
+// {
+//     x: x
+// }
