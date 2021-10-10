@@ -10,6 +10,8 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
   </head>
   <body
     class="bg-gray-100 h-screen overflow-auto"
@@ -25,7 +27,7 @@
             <textarea class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg" rows="5" placeholder="Title" id="content"></textarea>
 
             <div class="flex justify-end">
-                <button id="submit" class="py-3 px-6 bg-indigo-500 text-white rounded-md">Нийтлэх</button>
+                <button id="submit" class="py-3 mt-4 px-6 bg-indigo-500 text-white rounded-md">Нийтлэх</button>
             </div>
         </form>
     </div>
@@ -48,10 +50,17 @@
         }
       });
 
+      tinymce.init({
+          selector: '#content'
+      })
+
       submit.addEventListener('click', e => {
           e.preventDefault();
           createPost();
       })
+
+    // Хэрэглэгчийн хуудсанд постууд харагддаг байх
+    // дурын пост дээр дарах үед тухайн постыг унших хуудас руу орно
     </script>
   </body>
 </html>
