@@ -33,8 +33,6 @@ import { register } from './controller.js'
 // console.log(nas)
 // console.log(post)
 
-// MVS - Model , View, Controller;
-
 window.addEventListener('load', () => {
     if(localStorage['users']){
         users = JSON.parse(localStorage['users'])

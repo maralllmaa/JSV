@@ -26,13 +26,22 @@
 
     </form>
 
-    <script>
+    <script type="module">
         const submit = document.querySelector('#submit');
         const email = document.querySelector('#email');
         const password = document.querySelector('#password');
 
+        import {loginController} from './controller.js';
+
         let users;
+
+
+
         window.addEventListener('load', () => {
+            if(localStorage['currentUser']){
+                location.href = './account.html'
+            }
+
             if(localStorage['users']){
                 users = JSON.parse(localStorage['users'])
             }
@@ -41,6 +50,7 @@
 
         submit.addEventListener('click', e => {
             e.preventDefault();
+            loginController(users, email.value, password.value)
         })
     </script>
 </body>

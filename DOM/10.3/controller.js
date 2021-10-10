@@ -2,6 +2,8 @@
 // login
 // logout
 
+import { Post } from './model.js';
+
 export const register = (users , inputs, User ,isValidForm, callback) => {
 
     isValidForm = true;
@@ -34,6 +36,32 @@ export const register = (users , inputs, User ,isValidForm, callback) => {
         })
         return
     }
+}
+
+export const loginController = (users, email, password) => {
+    const currentUser = users.find(user => user.email === email);
+    if(!currentUser){
+        swal({
+            icon: 'error',
+            text: 'Имэйл эсвэл нууц үг буруу байна...'
+        })
+    } else {
+        if(currentUser.password === password){
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            location.href = './account.html';
+        } else {
+            swal({
+                icon: 'error',
+                text: 'Имэйл эсвэл нууц үг буруу байна...'
+            })
+        }
+    }
+}
+
+export const createPost = (userId, title, content) => {
+    const post = new Post();
+    console.log(post)
 }
 
 // 

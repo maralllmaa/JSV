@@ -5,12 +5,16 @@ export class User {
         this.number = number;
         this.password = password;
         this.dob = dob;
-        this.posts = [];
+        this.id = Math.random().toString().split('.')[1];
     }
 }
 
 export class Post {
-    constructor(){
-        this.title = 'jhfdkjghkdj'
+    constructor(title, content, userId, created){
+        this.title = title;
+        this.content = content;
+        this.userId = userId;
+        this.created = created;
+        this.id = Math.random().toString().split('.')[1];
     }
 }

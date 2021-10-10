@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+  <body
+    class="bg-gray-100 h-screen overflow-auto"
+  >
+
+    <h1 class="text-3xl font-bold" id="username"></h1>
+
+    <div class="flex justify-center">
+        <form class="p-4 flex flex-col w-11/12 my-4 bg-white rounded-xl">
+            <label class="font-bold" for="title">Title</label>
+            <input class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg" type="text" placeholder="Title" id="title">
+            <label class="font-bold" for="content">Content</label>
+            <textarea class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg" rows="5" placeholder="Title" id="content"></textarea>
+
+            <div class="flex justify-end">
+                <button id="submit" class="py-3 px-6 bg-indigo-500 text-white rounded-md">Нийтлэх</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        const submit = document.querySelector('#submit');
+        const title = document.querySelector('#title');
+        const content = document.querySelector('#content');
+
+        import { createPost } from './controller.js'
+
+      let currentUser;
+
+      window.addEventListener("load", () => {
+        if (localStorage["currentUser"]) {
+          currentUser = JSON.parse(localStorage["currentUser"]);
+          document.querySelector('#username').innerHTML = currentUser.username
+        } else {
+          location.href = "./login.html";
+        }
+      });
+
+      submit.addEventListener('click', e => {
+          e.preventDefault();
+          createPost();
+      })
+    </script>
+  </body>
+</html>
