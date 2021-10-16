@@ -18,8 +18,10 @@
     />
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script
-      src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"
-      referrerpolicy="origin"
+      src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.0/tinymce.min.js"
+      integrity="sha512-XNYSOn0laKYg55QGFv1r3sIlQWCAyNKjCa+XXF5uliZH+8ohn327Ewr2bpEnssV9Zw3pB3pmVvPQNrnCTRZtCg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     ></script>
   </head>
   <body class="bg-gray-100 h-screen overflow-auto">
@@ -70,6 +72,7 @@
         </div> -->
       </div>
     </div>
+    
 
     <script type="module">
       const submit = document.querySelector("#submit");
@@ -82,22 +85,20 @@
 
       let currentUser, posts;
 
-      // window.addEventListener("load", () => {
+      window.addEventListener("load", () => {
         if (localStorage["posts"]) {
-          posts = JSON.parse(localStorage['posts']);
+          posts = JSON.parse(localStorage["posts"]);
         } else {
           posts = [];
         }
         if (localStorage["currentUser"]) {
           currentUser = JSON.parse(localStorage["currentUser"]);
           document.querySelector("#username").innerHTML = currentUser.username;
-          updateUI()
+          updateUI();
         } else {
           location.href = "./login.html";
         }
-
-        
-      // });
+      });
 
       // tinymce.init({
       //   selector: "#content",
@@ -106,35 +107,47 @@
       submit.addEventListener("click", (e) => {
         e.preventDefault();
         createPost(currentUser.id, title.value, content.value, posts);
+        // console.log(tinymce.get('content').getContent())
 
-        updateUI()
+        updateUI();
       });
 
       // console.log(posts, currentUser)
 
       logout.addEventListener("click", logoutController);
 
-      function updateUI(){
-        postContainer.innerHTML = '';
-        posts.filter(el => el.userId === currentUser.id).forEach((post) => {
-          postContainer.insertAdjacentHTML(
-            "afterbegin",
-            `
+      function updateUI() {
+        postContainer.innerHTML = "";
+        posts
+          .filter((el) => el.userId === currentUser.id)
+          .forEach((post) => {
+            postContainer.insertAdjacentHTML(
+              "afterbegin",
+              `
           <div class=" w-full p-4 bg-white rounded-xl my-4">
             <div class="flex justify-between items-center">
-              <h1 class="font-bold mb-2 text-xl">
-                ${post.title.slice(0,67)}...
+              <h1 id="postTitle" class="font-bold mb-2 text-xl">
+                ${post.title.slice(0, 67)}...
               </h1>
-              <p class="text-xs text-gray-500">2021/10/16</p>
+              <input value="${post.id}" hidden />
+              <p class="text-xs text-gray-500">${post.created.date}</p>
             </div>
     
             <p class="text-justify">${post.content.slice(0, 240)}...</p>
           </div>
           `
-          );
-        });
+            );
+          });
       }
 
+      document.addEventListener("click", (e) => {
+        if (e.target.id === "postTitle") {
+          const postId = e.target.nextElementSibling.value;
+          const currentPost = posts.find((el) => el.id === postId);
+          localStorage.setItem("currentPost", JSON.stringify(currentPost));
+          location.href = "./articel.html";
+        }
+      });
       // Хэрэглэгчийн хуудсанд постууд харагддаг байх
       // дурын пост дээр дарах үед тухайн постыг унших хуудас руу орно
     </script>

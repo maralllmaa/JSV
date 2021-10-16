@@ -18,3 +18,13 @@ export class Post {
         this.id = Math.random().toString().split('.')[1];
     }
 }
+
+export class Comment {
+    // text, created, userId, postId, id
+}
+
+// export class Reply extends Comment {
+//     constructor(text, created, userId, postId, id){
+//         super(text, created, userId, postId, id);
+//     }
+// }
