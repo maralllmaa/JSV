@@ -59,9 +59,20 @@ export const loginController = (users, email, password) => {
     }
 }
 
-export const createPost = (userId, title, content) => {
-    const post = new Post();
+export const logoutController = () => {
+    localStorage.removeItem('currentUser');
+    location.href = './login.html'
+}
+
+export const createPost = (userId, title, content, posts) => {
+    const post = new Post(title, content, userId, {
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString()
+    });
+
+    posts.push(post);
     console.log(post)
+    localStorage.setItem('posts', JSON.stringify(posts));
 }
 
 // 

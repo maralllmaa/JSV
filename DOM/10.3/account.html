@@ -6,61 +6,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
       href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-
+    <script
+      src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
   </head>
-  <body
-    class="bg-gray-100 h-screen overflow-auto"
-  >
+  <body class="bg-gray-100 h-screen overflow-auto">
+    <div class="w-full flex justify-between items-center px-4">
+      <h1 class="text-3xl font-bold" id="username"></h1>
+      <button id="logout" class="w-8 h-8 rounded-full border-gray-400 border">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
 
-    <h1 class="text-3xl font-bold" id="username"></h1>
+    <div class="flex flex-col items-center justify-center">
+      <form class="p-4 flex flex-col w-11/12 my-4 bg-white rounded-xl">
+        <label class="font-bold" for="title">Title</label>
+        <input
+          class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg"
+          type="text"
+          placeholder="Title"
+          id="title"
+        />
+        <label class="font-bold" for="content">Content</label>
+        <textarea
+          class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg"
+          rows="5"
+          placeholder="Title"
+          id="content"
+        ></textarea>
 
-    <div class="flex justify-center">
-        <form class="p-4 flex flex-col w-11/12 my-4 bg-white rounded-xl">
-            <label class="font-bold" for="title">Title</label>
-            <input class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg" type="text" placeholder="Title" id="title">
-            <label class="font-bold" for="content">Content</label>
-            <textarea class="py-2 w-full bg-gray-100 mb-4 px-4 rounded-lg" rows="5" placeholder="Title" id="content"></textarea>
+        <div class="flex justify-end">
+          <button
+            id="submit"
+            class="py-3 mt-4 px-6 bg-indigo-500 text-white rounded-md"
+          >
+            Нийтлэх
+          </button>
+        </div>
+      </form>
 
-            <div class="flex justify-end">
-                <button id="submit" class="py-3 mt-4 px-6 bg-indigo-500 text-white rounded-md">Нийтлэх</button>
-            </div>
-        </form>
+      <div class="w-11/12" id="postContainer">
+        <!-- <div class=" w-full p-4 bg-white rounded-xl my-4">
+          <div class="flex justify-between items-center">
+            <h1 class="font-bold text-xl">
+              title
+            </h1>
+            <p class="text-xs text-gray-500">2021/10/16</p>
+          </div>
+  
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas explicabo ipsum, minima voluptates voluptatem odit maiores aperiam cumque ex perferendis quos recusandae blanditiis assumenda possimus eos enim perspiciatis beatae! Soluta.</p>
+        </div> -->
+      </div>
     </div>
 
     <script type="module">
-        const submit = document.querySelector('#submit');
-        const title = document.querySelector('#title');
-        const content = document.querySelector('#content');
+      const submit = document.querySelector("#submit");
+      const title = document.querySelector("#title");
+      const content = document.querySelector("#content");
+      const logout = document.querySelector("#logout");
+      const postContainer = document.querySelector("#postContainer");
 
-        import { createPost } from './controller.js'
+      import { createPost, logoutController } from "./controller.js";
 
-      let currentUser;
+      let currentUser, posts;
 
-      window.addEventListener("load", () => {
+      // window.addEventListener("load", () => {
+        if (localStorage["posts"]) {
+          posts = JSON.parse(localStorage['posts']);
+        } else {
+          posts = [];
+        }
         if (localStorage["currentUser"]) {
           currentUser = JSON.parse(localStorage["currentUser"]);
-          document.querySelector('#username').innerHTML = currentUser.username
+          document.querySelector("#username").innerHTML = currentUser.username;
+          updateUI()
         } else {
           location.href = "./login.html";
         }
+
+        
+      // });
+
+      // tinymce.init({
+      //   selector: "#content",
+      // });
+
+      submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        createPost(currentUser.id, title.value, content.value, posts);
+
+        updateUI()
       });
 
-      tinymce.init({
-          selector: '#content'
-      })
+      // console.log(posts, currentUser)
 
-      submit.addEventListener('click', e => {
-          e.preventDefault();
-          createPost();
-      })
+      logout.addEventListener("click", logoutController);
 
-    // Хэрэглэгчийн хуудсанд постууд харагддаг байх
-    // дурын пост дээр дарах үед тухайн постыг унших хуудас руу орно
+      function updateUI(){
+        postContainer.innerHTML = '';
+        posts.filter(el => el.userId === currentUser.id).forEach((post) => {
+          postContainer.insertAdjacentHTML(
+            "afterbegin",
+            `
+          <div class=" w-full p-4 bg-white rounded-xl my-4">
+            <div class="flex justify-between items-center">
+              <h1 class="font-bold mb-2 text-xl">
+                ${post.title.slice(0,67)}...
+              </h1>
+              <p class="text-xs text-gray-500">2021/10/16</p>
+            </div>
+    
+            <p class="text-justify">${post.content.slice(0, 240)}...</p>
+          </div>
+          `
+          );
+        });
+      }
+
+      // Хэрэглэгчийн хуудсанд постууд харагддаг байх
+      // дурын пост дээр дарах үед тухайн постыг унших хуудас руу орно
     </script>
   </body>
 </html>
