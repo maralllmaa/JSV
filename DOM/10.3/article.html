@@ -23,6 +23,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <style>
+        .swal-button {
+            background-color: #6366F1 !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div id="container" class="container my-4 mx-auto bg-white rounded-xl p-4">
@@ -33,16 +38,20 @@
         <textarea type="text" id="comment" class="w-full py-2 px-4 rounded-md bg-gray-100 mt-2" placeholder="Сэтгэгдэл үлээх" rows="4"></textarea>
         <button class="mt-2 rounded-md bg-indigo-500 text-white py-2 px-4">Коммент</button>
     </form>
+    <div id="commentContainer">
+        
+    </div>
     <script type="module">
         const container = document.querySelector('#container');
         const submit = document.querySelector('#submit');
         const comment = document.querySelector('#comment');
+        const commentContainer = document.querySelector('#commentContainer')
 
         import { writeComment } from './controller.js';
 
 
         let currentPost, owner, comments;
-        window.addEventListener('load', () => {
+        // window.addEventListener('load', () => {
             
             if(localStorage['currentPost']){
                 currentPost = JSON.parse(localStorage['currentPost']);
@@ -56,6 +65,7 @@
 
             if(localStorage['comments']){
                 comments = JSON.parse(localStorage['comments'])
+
             } else {
                 comments = [];
             }
@@ -63,10 +73,10 @@
             if(localStorage['users']){
                 owner = JSON.parse(localStorage['users']).find(el => el.id === currentPost.userId);
                 container.insertAdjacentHTML('beforeend', `
-                    <p class="text-right text-gray-500">Нийтлэсэн: ${owner.username}</p>
+                    <p class="text-right text-gray-500">Нийтлэсэн: ${owner.username}, ${currentPost.created.date}</p>
                 `)
             }
-        });
+        // });
 
         submit.addEventListener('submit', e => {
             e.preventDefault();
@@ -76,12 +86,27 @@
                 if(localStorage['currentUser']){
                     let userId = JSON.parse(localStorage['currentUser']).id
                     writeComment(userId, currentPost.id, comment.value, comments);
-                    console.log(comments)
+                    updateComments();
+                    comment.value = ''
                 }
             }
         })
 
+        function updateComments(){
+            commentContainer.innerHTML = ''
+            comments.filter(el => el.postId === currentPost.id).forEach(com => {
+                const commentOwner = JSON.parse(localStorage['users']).find(el => el.id === com.userId);
+                commentContainer.insertAdjacentHTML('afterbegin', `
+                <div id="container" class="container my-4 mx-auto bg-white rounded-xl p-4">
+                    <h1 class="font-bold">${commentOwner.username}</h1>
+                    <p>${com.text}</p>
+                    <p class="text-right text-gray-500">${com.created.date}</p>
+                </div>
+                `)
+            })
+        }
 
+        updateComments()
     </script>
 </body>
 </html>
