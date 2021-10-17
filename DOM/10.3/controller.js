@@ -2,7 +2,7 @@
 // login
 // logout
 
-import { Post } from './model.js';
+import { Post , Comment } from './model.js';
 
 export const register = (users , inputs, User ,isValidForm, callback) => {
 
@@ -73,6 +73,15 @@ export const createPost = (userId, title, content, posts) => {
     posts.push(post);
     console.log(post)
     localStorage.setItem('posts', JSON.stringify(posts));
+}
+
+export const writeComment = (userId, postId, text, comments) => {
+    const comment = new Comment(text, {
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString()
+    }, userId, postId);
+    comments.push(comment);
+    localStorage.setItem('comments', JSON.stringify(comments))
 }
 
 // 

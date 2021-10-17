@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.0/tinymce.min.js"
+      integrity="sha512-XNYSOn0laKYg55QGFv1r3sIlQWCAyNKjCa+XXF5uliZH+8ohn327Ewr2bpEnssV9Zw3pB3pmVvPQNrnCTRZtCg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+</head>
+<body class="bg-gray-100">
+    <div id="container" class="container my-4 mx-auto bg-white rounded-xl p-4">
+        
+    </div>
+    <form id="submit" class="container flex flex-col items-end my-4 mx-auto bg-white rounded-xl p-4">
+        <label class="w-full" for="comment">Сэтгэгдэл үлдээх</label>
+        <textarea type="text" id="comment" class="w-full py-2 px-4 rounded-md bg-gray-100 mt-2" placeholder="Сэтгэгдэл үлээх" rows="4"></textarea>
+        <button class="mt-2 rounded-md bg-indigo-500 text-white py-2 px-4">Коммент</button>
+    </form>
+    <script type="module">
+        const container = document.querySelector('#container');
+        const submit = document.querySelector('#submit');
+        const comment = document.querySelector('#comment');
+
+        import { writeComment } from './controller.js';
+
+
+        let currentPost, owner, comments;
+        window.addEventListener('load', () => {
+            
+            if(localStorage['currentPost']){
+                currentPost = JSON.parse(localStorage['currentPost']);
+                container.insertAdjacentHTML('afterbegin', `
+                    <h1 class="font-bold mb-6">${currentPost.title}</h1>
+                    <p class="text-justify mb-2">${currentPost.content}</p>
+                    
+                `)
+
+            }
+
+            if(localStorage['comments']){
+                comments = JSON.parse(localStorage['comments'])
+            } else {
+                comments = [];
+            }
+
+            if(localStorage['users']){
+                owner = JSON.parse(localStorage['users']).find(el => el.id === currentPost.userId);
+                container.insertAdjacentHTML('beforeend', `
+                    <p class="text-right text-gray-500">Нийтлэсэн: ${owner.username}</p>
+                `)
+            }
+        });
+
+        submit.addEventListener('submit', e => {
+            e.preventDefault();
+            if(comment.value === ''){
+                swal('Хоосон байж болохгүй')
+            } else {
+                if(localStorage['currentUser']){
+                    let userId = JSON.parse(localStorage['currentUser']).id
+                    writeComment(userId, currentPost.id, comment.value, comments);
+                    console.log(comments)
+                }
+            }
+        })
+
+
+    </script>
+</body>
+</html>

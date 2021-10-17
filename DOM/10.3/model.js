@@ -20,6 +20,13 @@ export class Post {
 }
 
 export class Comment {
+    constructor(text, created, userId, postId){
+        this.text = text;
+        this.created = created;
+        this.userId= userId;
+        this.postId = postId;
+        this.id = Math.random().toString().split('.')[1];
+    }
     // text, created, userId, postId, id
 }
 
