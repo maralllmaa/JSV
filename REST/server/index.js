@@ -15,8 +15,12 @@ app.use(bp.json());
 app.use(userRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
-app.listen(3000, () => {
-    console.log('server started on port 3000')
+.then(() => {
+    app.listen(3000, () => {
+        console.log('server started on port 3000')
+    })
 })
 
 // Create, Read, Update, Delete
+
+// https://github.com/Taichir0923/JSV
