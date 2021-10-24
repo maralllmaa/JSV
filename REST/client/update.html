@@ -62,15 +62,42 @@
       const number = document.querySelector("#number");
       const password = document.querySelector("#password");
 
+      let result;
+
       window.addEventListener('load', async () => {
           const userId = localStorage.getItem('updateUserId')
           const response = await fetch('http://localhost:3000/singleUser/' + userId);
-          const result = await response.json();
+          result = await response.json();
           
           username.value = result.username;
           email.value = result.email;
           number.value = result.number;
           password.value = result.password;
+      })
+
+      submit.addEventListener('click', e => {
+          e.preventDefault();
+          const updateUserData = {
+              username: username.value,
+              email: email.value,
+              number: number.value,
+              password: password.value
+          }
+          fetch('http://localhost:3000/updateUser/' + result._id, {
+              method: 'post',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(updateUserData)
+          })
+            .then(res => res.json())
+            .then(result => {
+                // swal({
+                //     icon: 'success',
+                //     text: result.message
+                // });
+                location.href = './userList.html'
+            })
       })
     </script>
   </body>
