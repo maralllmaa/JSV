@@ -41,7 +41,8 @@
 
         document.addEventListener('click', e => {
             if(e.target.id === 'update' || e.target.id === 'updateIcon'){
-                localStorage.setItem("updateUserId" , e.target.parentNode.previousElementSibling.children[0].value)
+                localStorage.setItem("updateUserId" , e.target.parentNode.previousElementSibling.children[0].value);
+                location.href = './update.html';
             }
         })
     </script>
