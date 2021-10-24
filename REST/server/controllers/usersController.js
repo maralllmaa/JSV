@@ -25,3 +25,33 @@ exports.getAllUsers = (req, res) => {
         })
         .catch(err => console.log(err))
 }
+
+exports.updateUser = (req, res) => {
+    const userId = req.params.id;
+    const { username, email, number, password } = req.body
+    User.findById(userId)
+        .then(user => {
+            if(!user){
+                throw Error('Хэрэглэгч олдсонгүй...')
+            }
+            user.username = username;
+            user.email = email;
+            user.number = number;
+            user.password = password;
+            return user.save();
+        })
+        .then(result => {
+            res.json({
+                message: 'Амжилттай шинэчиллээ'
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+exports.singleUser = (req, res) => {
+    const userId = req.params.id;
+    User.findById(userId)
+        .then(user => {
+            res.json(user)
+        })
+}

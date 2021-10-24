@@ -59,6 +59,3 @@ function resetForm(){
     password.value = '';
 }
 
-fetch('http://localhost:3000/allUsers')
-    .then(res => res.json())
-    .then(result => console.log(result))
