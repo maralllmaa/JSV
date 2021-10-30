@@ -65,14 +65,21 @@
       let result;
 
       window.addEventListener('load', async () => {
-          const userId = localStorage.getItem('updateUserId')
-          const response = await fetch('http://localhost:3000/singleUser/' + userId);
-          result = await response.json();
-          
-          username.value = result.username;
-          email.value = result.email;
-          number.value = result.number;
-          password.value = result.password;
+          try {
+              const userId = localStorage.getItem('updateUserId')
+              const response = await fetch('http://localhost:3000/singleUser/' + userId);
+
+              if(!response.ok) throw Error('Сервертэй холбогдоход алдаа гарлаа')
+
+              result = await response.json();
+              
+              username.value = result.username;
+              email.value = result.email;
+              number.value = result.number;
+              password.value = result.password;
+          } catch(err){
+            alert(err.message)
+          }
       })
 
       submit.addEventListener('click', e => {

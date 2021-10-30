@@ -58,4 +58,3 @@ function resetForm(){
     number.value = '';
     password.value = '';
 }
-

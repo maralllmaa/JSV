@@ -1,21 +1,25 @@
 const User = require('../model/user');
+const bcrypt = require('bcryptjs');
 exports.registerUser = (req, res) => {
     const {username, email, number, password} = req.body;
     console.log(username);
-    const user = new User({
-        username: username,
-        email: email,
-        number: number,
-        password: password
-    })
-
-    user.save()
-        .then(result => {
-            res.json({
-                message: "Амжилттай бүртгэгдлээ"
+    return bcrypt.hash(password, 12)
+        .then(passHash => {
+            const user = new User({
+                username: username,
+                email: email,
+                number: number,
+                password: passHash
             })
+        
+            return user.save()
+                .then(result => {
+                    res.json({
+                        message: "Амжилттай бүртгэгдлээ"
+                    })
+                })
+                .catch(err => console.log(err))
         })
-        .catch(err => console.log(err))
 }
 
 exports.getAllUsers = (req, res) => {
@@ -54,4 +58,16 @@ exports.singleUser = (req, res) => {
         .then(user => {
             res.json(user)
         })
+}
+
+exports.deleteUser = (req, res) => {
+    const userId = req.params.id;
+
+    User.findByIdAndRemove(userId)
+        .then(result => {
+            res.json({
+                message: 'Амжилттай устгагдлаа'
+            })
+        })
+        .catch(err => console.log(err))
 }
