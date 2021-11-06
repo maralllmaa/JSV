@@ -1,5 +1,5 @@
 const Form = props => {
-    return <form className='w-96' onSubmit={props.onSubmit}>
+    return <form className='w-96 flex w-full flex-col' onSubmit={props.onSubmit}>
         {
             props.children
         }
