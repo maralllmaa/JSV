@@ -9,3 +9,9 @@ ReactDOM.render(
     <App />,
   document.getElementById('root')
 );
+
+// GET, POST
+// Authentication
+// CRUD
+// HTML, CSS, ejs
+// mongoDB, SQL

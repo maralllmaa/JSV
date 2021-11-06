@@ -9,19 +9,24 @@ const navlist = ["лэндми хэтэвч", "лэндми хувьцаа", "б
 
 function App() {
   // story, setStory
-  const [x, setX] = useState(100);
-  const [open, setOpen] = useState(false)
-
-  const decreaseHandler = () => {
-    setX(x - 1);
-  }
-
-  const increaseHandler = () => {
-    setX(x + 1);
-  }
+  const [open, setOpen] = useState(false);
+  const [enteredValue, setEnteredValue] = useState('');
+  const [list, setList] = useState([]);
 
   const openMenu = () => {
     setOpen(true)
+  }
+
+  const closeMenu = () => {
+    setOpen(false)
+  }
+
+  const submitHandler = e => {
+    e.preventDefault();
+    setList([...list, {
+      ner: enteredValue,
+      id: Math.random().toString().split('.')[1]
+    }]);
   }
 
   return (
@@ -43,16 +48,22 @@ function App() {
       </div>
 
       <div className="w-full flex-col h-screen bg-green-400 flex justify-center items-center">
-        <h1 className="text-5xl">{x}</h1>
-        <div>
-          <button onClick={decreaseHandler} className="text-3xl p-4 bg-white mx-6">-</button>
-          <button onClick={increaseHandler} className="text-3xl p-4 bg-white mx-6">+</button>
-        </div>
+        <form onSubmit={submitHandler} className="flex flex-col items-start justify-center">
+          <label htmlFor="email">Email</label>
+          <input onChange={e => setEnteredValue(e.target.value)} className="py-2 px-4 rounded-md" id="email" placeholder="Email" />
+          <button>hevle</button>
+        </form>
+
+        {
+          list.map(el => (
+            <h1>{el.ner}</h1>
+          ))
+        }
       </div>
 
       {
         open && ReactDOM.createPortal(
-          <Backdrop />,
+          <Backdrop customClass={open ? 'bla' : ''} close={closeMenu} />,
           document.querySelector('#portal')
         )
       }
