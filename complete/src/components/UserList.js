@@ -10,7 +10,7 @@ const UserList = props => {
             {
                 props.data.map(el => (
                     <ListItem ner={el.username} key={`user--${el.id}`}>
-                        <Button typ="circle" bg="green" val={<AiOutlineEdit />} />
+                        <Button onClick={() => props.getEditData(el.id)} typ="circle" bg="green" val={<AiOutlineEdit />} />
                         <Button onClick={() => props.deleteUser(el.id)} typ="circle" bg="red" val={<FaTimes />} />
                     </ListItem>
                 ))

@@ -16,6 +16,7 @@ const App = () => {
     const [ password , setPassword ] = useState('');
     const [ userList , setUserList ] = useState([]);
     const [ edit , setEdit ] = useState(false);
+    const [ userId , setUserId ] = useState(null);
     const submitHandler = e => {
         e.preventDefault();
         if(username.trim() !== '' && email.trim() !== '' && number.trim() !== '' && password.trim() !== ''){
@@ -51,6 +52,13 @@ const App = () => {
         setUserList(userList.filter(user => user.id !== id))
     }
 
+    const getData = id => {
+        setUserId(id);
+        setEdit(true);
+        const userInfo = userList.find(user => user.id === id);
+        setUsername(userInfo.username);
+    }
+
     return (
         <React.Fragment>
             <Container>
@@ -72,7 +80,7 @@ const App = () => {
 
                 <Divider />
 
-                {userList.length !== 0 && <UserList deleteUser={deleteHandler} data={userList} />}
+                {userList.length !== 0 && <UserList getEditData={getData} deleteUser={deleteHandler} data={userList} />}
             </Container>
         </React.Fragment>
     );
