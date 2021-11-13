@@ -72,7 +72,7 @@ const App = () => {
 
                 <Divider />
 
-                <UserList deleteUser={deleteHandler} data={userList} />
+                {userList.length !== 0 && <UserList deleteUser={deleteHandler} data={userList} />}
             </Container>
         </React.Fragment>
     );
