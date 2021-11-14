@@ -8,6 +8,7 @@ import Button from "./Button";
 import UserList from "./UserList";
 import Divider from "./Divider";
 import swal from "sweetalert";
+import TextArea from "./TextArea";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -100,6 +101,8 @@ const App = () => {
               id="username"
               placeholder="Username"
             />
+            <Label htmlFor="articleBody" label="Нийтлэл" />
+            <TextArea id="articleBody" placeholder="Нийтлэл" />
             <Label htmlFor="email" label="Email" />
             <Input
               onChange={(e) => setEmail(e.target.value)}
