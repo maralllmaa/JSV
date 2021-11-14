@@ -9,6 +9,7 @@ import UserList from "./UserList";
 import Divider from "./Divider";
 import swal from "sweetalert";
 import TextArea from "./TextArea";
+import axios from "axios";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -89,6 +90,11 @@ const App = () => {
     setPassword(userInfo.username);
   };
 
+  const getUserData = async () => {
+    const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
+    setUserList(data)
+  }
+
   return (
     <React.Fragment>
       <Container>
@@ -132,13 +138,15 @@ const App = () => {
 
         <Divider />
 
-        {userList.length !== 0 && (
-          <UserList
-            getEditData={getData}
-            deleteUser={deleteHandler}
-            data={userList}
-          />
-        )}
+        {
+          userList.length !== 0 ? (
+            <UserList
+              getEditData={getData}
+              deleteUser={deleteHandler}
+              data={userList}
+            />
+          ) : <Button onClick={getUserData} val="Хэрэглэгчийн дата татах" bg="green" />
+        }
       </Container>
     </React.Fragment>
   );
@@ -148,3 +156,6 @@ export default App;
 
 // Edit
 // Article 
+
+// Fetch API - JSON placeholder - 10 users
+// хэрэглэгч дээр дарах үед тухайн хэрэглэгчийн todo list модал дотор гарч ирэх
