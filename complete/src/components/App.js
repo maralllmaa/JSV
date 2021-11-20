@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Card from "./Card";
 import Container from "./Container";
 import Form from "./Form";
@@ -19,7 +19,8 @@ const App = () => {
   const [userList, setUserList] = useState([]);
   const [edit, setEdit] = useState(false);
   const [userId, setUserId] = useState(null);
-  const submitHandler = (e) => {
+  const [todoList , setTodoList] = useState([]);
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (
       username.trim() !== "" &&
@@ -27,20 +28,18 @@ const App = () => {
       number.trim() !== "" &&
       password.trim() !== ""
     ) {
-      setUserList([
-        ...userList,
-        {
-          username: username,
-          email: email,
-          number: number,
-          password: password,
-          id: Math.random().toString().split(".")[1],
-        },
-      ]);
 
+      const formData = {
+        username: username,
+        email: email,
+        number: number,
+        password: password
+      }
+
+      const {data} = await axios.post('http://localhost:3001/register', formData);
       swal({
         icon: "success",
-        text: "Амжилттай бүртгэгдлээ",
+        text: data.message,
       });
       resetForm();
     } else {
@@ -53,7 +52,7 @@ const App = () => {
 
   const updateHandler = e => {
     e.preventDefault();
-    const userIndex = userList.findIndex(user => user.id === userId);
+    const userIndex = userList.findIndex(user => user._id === userId);
     const updateUserData = [...userList];
     updateUserData[userIndex] = {
         username: username,
@@ -75,7 +74,7 @@ const App = () => {
   }
 
   const deleteHandler = (id) => {
-    setUserList(userList.filter((user) => user.id !== id));
+    setUserList(userList.filter((user) => user._id !== id));
     setEdit(false);
     resetForm();
   };
@@ -83,7 +82,7 @@ const App = () => {
   const getData = (id) => {
     setUserId(id);
     setEdit(true);
-    const userInfo = userList.find((user) => user.id === id);
+    const userInfo = userList.find((user) => user._id === id);
     setUsername(userInfo.username);
     setEmail(userInfo.email);
     setNumber(userInfo.number);
@@ -94,6 +93,16 @@ const App = () => {
     const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
     setUserList(data)
   }
+
+  const getTodos = async id => {
+    const {data} = await axios.get(`https://jsonplaceholder.typicode.com/todos/?userId=${id}`);
+    setTodoList(data);
+  }
+
+  useEffect(async () => {
+    const {data} = await axios.get('http://localhost:3001/users');
+    setUserList(data.users)
+  }, [])
 
   return (
     <React.Fragment>
@@ -141,6 +150,7 @@ const App = () => {
         {
           userList.length !== 0 ? (
             <UserList
+              getTodoData={getTodos}
               getEditData={getData}
               deleteUser={deleteHandler}
               data={userList}
