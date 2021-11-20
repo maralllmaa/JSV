@@ -99,9 +99,12 @@ const App = () => {
     setTodoList(data);
   }
 
-  useEffect(async () => {
-    const {data} = await axios.get('http://localhost:3001/users');
-    setUserList(data.users)
+  useEffect(() => {
+    async function getUsersFromApi(){
+      const {data} = await axios.get('http://localhost:3001/users');
+      setUserList(data.users)
+    }
+    getUsersFromApi()
   }, [])
 
   return (
