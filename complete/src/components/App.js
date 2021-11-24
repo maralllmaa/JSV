@@ -8,7 +8,6 @@ import Button from "./Button";
 import UserList from "./UserList";
 import Divider from "./Divider";
 import swal from "sweetalert";
-import TextArea from "./TextArea";
 import axios from "axios";
 
 const App = () => {
@@ -20,6 +19,7 @@ const App = () => {
   const [edit, setEdit] = useState(false);
   const [userId, setUserId] = useState(null);
   const [todoList , setTodoList] = useState([]);
+  const [update, setUpdate] = useState(false)
   const submitHandler = async (e) => {
     e.preventDefault();
     if (
@@ -42,6 +42,7 @@ const App = () => {
         text: data.message,
       });
       resetForm();
+      setUpdate(true)
     } else {
       swal({
         icon: "error",
@@ -50,18 +51,21 @@ const App = () => {
     }
   };
 
-  const updateHandler = e => {
+  const updateHandler = async e => {
     e.preventDefault();
-    const userIndex = userList.findIndex(user => user._id === userId);
-    const updateUserData = [...userList];
-    updateUserData[userIndex] = {
-        username: username,
-        email: email,
-        number: number,
-        password: password,
-        id: userId
+
+    const formData = {
+      username: username,
+      email: email,
+      number: number,
+      password: password,
+      userId: userId
     }
-    setUserList(updateUserData);
+    
+    await axios.post('http://localhost:3001/update' , formData)
+
+    setUpdate(true);
+    
     setEdit(false);
     resetForm();
   }
@@ -73,8 +77,9 @@ const App = () => {
     setPassword("");
   }
 
-  const deleteHandler = (id) => {
-    setUserList(userList.filter((user) => user._id !== id));
+  const deleteHandler = async (id) => {
+    await axios.post(`http://localhost:3001/deleteUser/${id}`);
+    setUpdate(true)
     setEdit(false);
     resetForm();
   };
@@ -89,11 +94,6 @@ const App = () => {
     setPassword(userInfo.username);
   };
 
-  const getUserData = async () => {
-    const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
-    setUserList(data)
-  }
-
   const getTodos = async id => {
     const {data} = await axios.get(`https://jsonplaceholder.typicode.com/todos/?userId=${id}`);
     setTodoList(data);
@@ -104,8 +104,9 @@ const App = () => {
       const {data} = await axios.get('http://localhost:3001/users');
       setUserList(data.users)
     }
+    setUpdate(false)
     getUsersFromApi()
-  }, [])
+  }, [update])
 
   return (
     <React.Fragment>
@@ -119,8 +120,6 @@ const App = () => {
               id="username"
               placeholder="Username"
             />
-            <Label htmlFor="articleBody" label="Нийтлэл" />
-            <TextArea id="articleBody" placeholder="Нийтлэл" />
             <Label htmlFor="email" label="Email" />
             <Input
               onChange={(e) => setEmail(e.target.value)}
@@ -158,7 +157,9 @@ const App = () => {
               deleteUser={deleteHandler}
               data={userList}
             />
-          ) : <Button onClick={getUserData} val="Хэрэглэгчийн дата татах" bg="green" />
+          ) : <Container>
+            <h1>Хэрэглэгч бүртгэлгүй байна.</h1>
+          </Container>
         }
       </Container>
     </React.Fragment>
@@ -167,8 +168,5 @@ const App = () => {
 
 export default App;
 
-// Edit
-// Article 
-
-// Fetch API - JSON placeholder - 10 users
-// хэрэглэгч дээр дарах үед тухайн хэрэглэгчийн todo list модал дотор гарч ирэх
+// Authentication
+// Article
